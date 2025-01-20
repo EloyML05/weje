@@ -1,0 +1,152 @@
+<div class="container mt-5 d-flex align-items-center justify-content-center">
+  <div class="row">
+    <div class="col text-center">
+      <h2 class="my-2">
+        <i class="bi bi-pencil"></i>
+        Edición de Tipousuario
+        <i class="bi bi-newspaper"></i>
+      </h2>
+      <form [formGroup]="oTipousuarioForm!" (ngSubmit)="onSubmit()" novalidate>
+        <div class="row mt-4">
+          <mat-form-field>
+            <mat-label>Id</mat-label>
+            <input matInput formControlName="id" placeholder="Id" readonly />
+            <mat-hint align="end">No se puede cambiar</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="row mt-4">
+          <mat-form-field>
+            <mat-label>Descripcion</mat-label>
+            <input
+              matInput
+              formControlName="descripcion"
+              placeholder="Describe"
+            />
+            <mat-hint align="start"
+              >Debe contener entre 3 y 255 caracteres</mat-hint
+            >
+            @if (oTipousuarioForm?.get('descripcion')?.hasError('required')){
+            <mat-error> El campo debe es obligatorio </mat-error>
+            } @if (oTipousuarioForm?.get('descripcion')?.hasError('pattern')){
+            <mat-error> Debe contener entre 3 y 255 caracteres </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="row mt-4">
+          <mat-form-field>
+            <mat-label>Credito o debito</mat-label>
+            <input
+              matInput
+              formControlName="creditoOdebito"
+              placeholder="Credito o debito"
+            />
+            <mat-hint align="start"
+              >escribe 1 si es con credito o 0 si es con debito</mat-hint
+            >
+            @if (oTipousuarioForm?.get('creditoOdebito')?.hasError('required')){
+            <mat-error> El campo credito o debito es obligatorio </mat-error>
+            } @if
+            (oTipousuarioForm?.get('creditoOdebito')?.hasError('pattern')){
+            <mat-error>
+              escribe 1 si es con credito o 0 si es con debito
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="row mt-4">
+          <mat-form-field>
+            <mat-label>comentarios</mat-label>
+            <input
+              matInput
+              formControlName="comentarios"
+              placeholder="Escribe un comentario"
+            />
+            <mat-hint align="start">De 3 caracteres a 255 caracteres</mat-hint>
+            @if (oTipousuarioForm?.get('comentarios')?.hasError('required')){
+            <mat-error> El campo comentarios es obligatorio </mat-error>
+            } @if (oTipousuarioForm?.get('comentarios')?.hasError('minlength')){
+            <mat-error> El comentario debe ser mas largo </mat-error>
+            } @if (oTipousuarioForm?.get('comentarios')?.hasError('maxlength')){
+            <mat-error> El comentario debe ser mas corto </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="row mt-4">
+          <mat-form-field>
+            <mat-label>real o nominal</mat-label>
+            <input
+              matInput
+              formControlName="realOnominal"
+              placeholder="Di si es real o nominal"
+            />
+            <mat-hint align="start"
+              >Escribe 1 si es real o 0 si es nominal.</mat-hint
+            >
+            @if (oTipousuarioForm?.get('realOnominal')?.hasError('required')){
+            <mat-error> El campo real o nominal es obligatorio </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <br />
+        <button
+          class="btn btn-warning mt-4 mx-1"
+          [routerLink]="['/admin', 'Tipousuario', 'plist']"
+        >
+          <i class="bi bi-list"></i>
+          Ir a listado de Tipousuario
+        </button>
+
+        <button class="btn btn-secondary mt-4 mx-1" (click)="onReset()">
+          <i class="bi bi-x-lg"></i>
+          Reset
+        </button>
+
+        <button
+          class="btn btn-primary mt-4 mx-1"
+          type="submit"
+          [disabled]="!oTipousuarioForm?.valid"
+        >
+          <i class="bi bi-floppy"></i>
+          Guardar
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  [id]="'mimodal'"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Contante</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="hideModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          (click)="hideModal()"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
