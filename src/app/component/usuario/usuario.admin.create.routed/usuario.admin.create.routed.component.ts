@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import {
   FormControl,
-  FormGroup,  
+  FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -30,7 +30,6 @@ declare let bootstrap: any;
   styleUrls: ['./usuario.admin.create.routed.component.css'],
 })
 export class UsuarioAdminCreateRoutedComponent implements OnInit {
-
   id: number = 0;
   oUsuarioForm: FormGroup | undefined = undefined;
   oUsuario: IUsuario | null = null;
@@ -67,7 +66,11 @@ export class UsuarioAdminCreateRoutedComponent implements OnInit {
       ]),
       apellido2: new FormControl(''),
       email: new FormControl('', [Validators.required, Validators.email]),
-      tipousuario: new FormControl('', [Validators.required, Validators.min(1)]),
+      tipousuario: new FormControl('', [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      password: new FormControl(''),
     });
   }
 
@@ -77,6 +80,7 @@ export class UsuarioAdminCreateRoutedComponent implements OnInit {
     this.oUsuarioForm?.controls['apellido2'].setValue('');
     this.oUsuarioForm?.controls['email'].setValue('');
     this.oUsuarioForm?.controls['tipousuario'].setValue('');
+    this.oUsuarioForm?.controls['password'].setValue('');
   }
 
   showModal(mensaje: string) {
@@ -86,16 +90,16 @@ export class UsuarioAdminCreateRoutedComponent implements OnInit {
     });
     this.myModal.show();
   }
-  getDorp(){
-this.oTipousuarioService.getAll().subscribe({
-  next: (data) => {
-    this.listaTipousuario = data;
-  console.log(this.listaTipousuario);
-  },
-  error: (err) => {
-    console.log(err);
-  },
-})
+  getDorp() {
+    this.oTipousuarioService.getAll().subscribe({
+      next: (data) => {
+        this.listaTipousuario = data;
+        console.log(this.listaTipousuario);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   onReset() {
@@ -106,39 +110,40 @@ this.oTipousuarioService.getAll().subscribe({
   hideModal = () => {
     this.myModal.hide();
     this.oRouter.navigate(['/admin/usuario/view/' + this.oUsuario?.id]);
-  }
+  };
 
   onSubmit() {
     if (this.oUsuarioForm?.invalid) {
       this.showModal('Formulario inválido');
       return;
-    } else {      
-      this.oTipousuarioService.getOne(this.oUsuarioForm?.value.tipousuario).subscribe({
-        next: (data: ITipousuario) => {
-data.usuarios={}
-          this.oUsuarioForm?.controls['tipousuario'].setValue(data);
-          console.log(data);
-          console.log(this.oUsuarioForm?.value);
-          this.oUsuarioService.create(this.oUsuarioForm?.value).subscribe({
-            next: (oUsuario: IUsuario) => {
-              this.oUsuario = oUsuario;
-              console.log(this.oUsuario);
-              this.showModal(
-                'Usuario creado con el id: ' + this.oUsuario.id
-              );
-            },
-            error: (err) => {
-              this.showModal('Error al crear el usuario');
-              console.log(err);
-            },
-          });
-        },
-        error: (err) => {
-          this.showModal('Error al crear el usuario');
-          console.log(err);
-        },
-      })
-      
+    } else {
+      this.oTipousuarioService
+        .getOne(this.oUsuarioForm?.value.tipousuario)
+        .subscribe({
+          next: (data: ITipousuario) => {
+            data.usuarios = [];
+            this.oUsuarioForm?.controls['password'].setValue('passwordChula');
+            this.oUsuarioForm?.controls['tipousuario'].setValue(data);
+            console.log(data);
+            console.log(this.oUsuarioForm?.value);
+            this.oUsuarioService.create(this.oUsuarioForm?.value).subscribe({
+              next: (oUsuario: IUsuario) => {
+                this.oUsuario = oUsuario;
+                console.log(this.oUsuario);
+                this.showModal('Usuario creado con el id: ' + this.oUsuario.id);
+              },
+              error: (err) => {
+                this.showModal('Error al crear el usuario');
+                console.log(err);
+              },
+            });
+          },
+          error: (err) => {
+            this.showModal('Error al crear el usuario');
+            console.log(err);
+          },
+        });
+
       this.oUsuarioService.create(this.oUsuarioForm?.value).subscribe({
         next: (oUsuario: IUsuario) => {
           this.oUsuario = oUsuario;
@@ -151,7 +156,4 @@ data.usuarios={}
       });
     }
   }
-
-
-
 }
