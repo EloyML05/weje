@@ -115,7 +115,7 @@ this.oTipousuarioService.getAll().subscribe({
     } else {      
       this.oTipousuarioService.getOne(this.oUsuarioForm?.value.tipousuario).subscribe({
         next: (data: ITipousuario) => {
-data.usuarios=
+data.usuarios={}
           this.oUsuarioForm?.controls['tipousuario'].setValue(data);
           console.log(data);
           console.log(this.oUsuarioForm?.value);
