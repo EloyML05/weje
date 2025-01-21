@@ -12,6 +12,7 @@ import { TipousuarioAdminDeleteRoutedComponent } from './component/tipousuario/t
 import { TipousuarioAdminEditRoutedComponent } from './component/tipousuario/tipousuario.admin.edit.routed/tipousuario.admin.edit.routed.component';
 import { TipousuarioAdminPlistRoutedComponent } from './component/tipousuario/tipousuario.admin.plist.routed/tipousuario.admin.plist.routed.component';
 import { TipousuarioAdminViewRoutedComponent } from './component/tipousuario/tipousuario.admin.view.routed/tipousuario.admin.view.routed.component';
+import { LoginComponent } from './component/login/login.component';
 
 
 export const routes: Routes = [
@@ -75,5 +76,9 @@ export const routes: Routes = [
   {
     path: 'admin/Tipousuario/view/:id',
     component: TipousuarioAdminViewRoutedComponent,
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
   },
 ];

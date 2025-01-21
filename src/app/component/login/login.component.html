@@ -1,0 +1,52 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <h2>Login</h2>
+      <form [formGroup]="loginForm!" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            formControlName="email"
+          />
+          @if (loginForm?.get('email')?.invalid &&
+          loginForm?.get('email')?.touched) {
+          <div class="text-danger">Email inválido.</div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            formControlName="password"
+          />
+          @if (loginForm?.get('password')?.invalid &&
+          loginForm?.get('password')?.touched) {
+          <div class="text-danger">
+            La contraseña debe tener al menos 6 caracteres.
+          </div>
+          }
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="loginForm?.invalid"
+        >
+          Iniciar sesión
+        </button>
+      </form>
+    </div>
+    @if (token){
+    <div class="col-md-12">
+      <label for="Token">Token</label>
+      <input type="text" id="Token" class="form-control" [ngModel]="token" />
+    </div>
+    }
+  </div>
+</div>
