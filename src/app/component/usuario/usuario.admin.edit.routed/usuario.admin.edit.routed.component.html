@@ -73,15 +73,28 @@
             }
           </mat-form-field>
         </div>
+        <div class="row mt-4">
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" placeholder="Password" />
+            <mat-hint align="end">Formato email</mat-hint>
+            @if (oUsuarioForm?.get('password')?.hasError('required')) {
+            <mat-error>Debes introducir un primer apellido</mat-error>
+            } 
+          </mat-form-field>
+        </div>
 
         <div class="row mt-4">
           <mat-form-field>
             <mat-label>Tipousuario</mat-label>
-            <input
-              matInput
-              formControlName="id_tipousuario"
-              placeholder="Escribe el tipo de usuario"
-            />
+            <mat-select formControlName="tipousuario">
+              @for (oTipousuario of listaTipousuario!; track oTipousuario.id; let index
+           = $index) {
+              <mat-option [value]="oTipousuario.id">
+                {{ oTipousuario.descripcion }}
+              </mat-option>
+              }
+            </mat-select>
           </mat-form-field>
         </div>
 

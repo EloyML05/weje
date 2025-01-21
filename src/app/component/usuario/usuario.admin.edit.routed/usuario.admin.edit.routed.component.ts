@@ -10,6 +10,10 @@ import {
 } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { TipousuarioService } from '../../../service/tipousuario.service';
+import { ITipousuario } from '../../../model/tipousuario.interface';
+
 
 declare let bootstrap: any;
 
@@ -23,6 +27,7 @@ declare let bootstrap: any;
     MatInputModule,
     ReactiveFormsModule,
     RouterModule,
+    MatSelectModule
   ],
 })
 export class UsuarioAdminEditRoutedComponent implements OnInit {
@@ -30,13 +35,14 @@ export class UsuarioAdminEditRoutedComponent implements OnInit {
   oUsuarioForm: FormGroup | undefined = undefined;
   oUsuario: IUsuario | null = null;
   message: string = '';
-
+listaTipousuario: ITipousuario[] = [];
   myModal: any;
 
   constructor(
     private oActivatedRoute: ActivatedRoute,
     private oUsuarioService: UsuarioService,
-    private oRouter: Router
+    private oRouter: Router,
+    private oTipousuarioService: TipousuarioService
   ) {
     this.oActivatedRoute.params.subscribe((params) => {
       this.id = params['id'];
@@ -47,6 +53,18 @@ export class UsuarioAdminEditRoutedComponent implements OnInit {
     this.createForm();
     this.get();
     this.oUsuarioForm?.markAllAsTouched();
+    this.getDorp();
+  }
+  getDorp() {
+    this.oTipousuarioService.getAll().subscribe({
+      next: (data) => {
+        this.listaTipousuario = data;
+        console.log(this.listaTipousuario);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   createForm() {
@@ -64,7 +82,11 @@ export class UsuarioAdminEditRoutedComponent implements OnInit {
       ]),
       apellido2: new FormControl(''),
       email: new FormControl('', [Validators.required, Validators.email]),
-      id_tipousuario: new FormControl('', [
+      password: new FormControl('' , [
+        Validators.required,
+        Validators.minLength(3),
+      ]),
+      tipousuario: new FormControl('', [
         Validators.required,
         Validators.min(1),
       ]),
@@ -90,7 +112,8 @@ export class UsuarioAdminEditRoutedComponent implements OnInit {
     this.oUsuarioForm?.controls['apellido1'].setValue(this.oUsuario?.apellido1);
     this.oUsuarioForm?.controls['apellido2'].setValue(this.oUsuario?.apellido2);
     this.oUsuarioForm?.controls['email'].setValue(this.oUsuario?.email);
-    this.oUsuarioForm?.controls['id_tipousuario'].setValue(
+    this.oUsuarioForm?.controls['password'].setValue(this.oUsuario?.password);
+    this.oUsuarioForm?.controls['tipousuario'].setValue(
       this.oUsuario?.tipousuario.id
     );
   }
@@ -125,17 +148,24 @@ export class UsuarioAdminEditRoutedComponent implements OnInit {
       this.showModal('Formulario no válido');
       return;
     } else {
-      this.oUsuarioService.update(this.oUsuarioForm?.value).subscribe({
-        next: (oUsuario: IUsuario) => {
-          this.oUsuario = oUsuario;
-          this.updateForm();
-          this.showModal('Usuario ' + this.oUsuario.id + ' actualizado');
-        },
-        error: (error) => {
-          this.showModal('Error al actualizar el usuario');
-          console.error(error);
-        },
-      });
+      this.oTipousuarioService.getOne(this.oUsuarioForm?.value.tipousuario).subscribe((data: ITipousuario) => {
+        data.usuarios = [];
+        console.log(data);
+        this.oUsuarioForm?.controls['tipousuario'].setValue(data);
+        this.oUsuarioService.update(this.oUsuarioForm?.value).subscribe({
+          next: (oUsuario: IUsuario) => {
+            this.oUsuario = oUsuario;
+            this.updateForm();
+            this.showModal('Usuario ' + this.oUsuario.id + ' actualizado');
+          },
+          error: (error) => {
+            this.showModal('Error al actualizar el usuario');
+            console.error(error);
+          },
+        });
+      })
+      
+     
     }
   }
 }
